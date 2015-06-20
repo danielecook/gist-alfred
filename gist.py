@@ -126,7 +126,7 @@ def main(wf):
 
 if __name__ == '__main__':
     wf = Workflow(update_settings={
-        'github_slug': 'danielecook/codebox-alfred',
+        'github_slug': 'danielecook/gist-alfred',
         'version': __version__,
         'frequency': 7
         })
