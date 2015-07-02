@@ -39,6 +39,9 @@ def main(wf):
     tag_set = []
     lang_set = []
     for gist in gists:
+        # fails if no description. to fix:
+        if not gist["description"]:
+            gist["description"]=''
         tags = list(set([x.replace("#","") for x in gist["description"].split(" ") if x.startswith("#")]))
         gist["tags"] = tags
         tag_set.extend(tags)
