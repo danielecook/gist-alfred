@@ -104,7 +104,7 @@ def main(wf):
     else:
         # Perform search
         search = term + " " + search
-        results = gists
+        results = gists[0:10]
 
     if show_results == True:
         if search != "":
