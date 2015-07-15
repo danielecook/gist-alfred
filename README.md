@@ -1,4 +1,7 @@
 # gist-alfred
+
+## [Download](https://github.com/danielecook/gist-alfred/releases/download/0.1/gist-alfred.alfredworkflow)
+
 An alfred workflow for accessing gists as snippets. Features:
 
 * Full Search
