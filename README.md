@@ -1,6 +1,6 @@
 # gist-alfred
 
-## [Download](https://github.com/danielecook/gist-alfred/releases/download/0.1/gist-alfred.alfredworkflow)
+### [Download](https://github.com/danielecook/gist-alfred/releases/latest)
 
 An alfred workflow for accessing gists as snippets. Features:
 
