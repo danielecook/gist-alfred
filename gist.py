@@ -107,12 +107,13 @@ def main(wf):
     else:
         # Perform search
         search = term + " " + search
-        results = gists[0:10]
+        results = gists
 
     if show_results == True:
         if search != "":
             results = wf.filter(search, results, lambda x: x["description"] + ' '.join(x["tags"]) + ' '.join(x["files"].keys()))
         for gist in results:
+            #print gists
             for filename, f in gist["files"].items():
                 if lang == "" or f["language"] == lang:
                     wf.add_item(gist["description"],

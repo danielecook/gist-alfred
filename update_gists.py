@@ -15,15 +15,16 @@ def get_gist():
                     'Authorization': 'token %s' % token}
 
     # Get Starred Gists
-    starred = web.post(url="https://api.github.com/gists/starred",headers=headers).json()
+    starred = web.post(url="https://api.github.com/gists/starred?per_page=100000",headers=headers).json()
     starred_ids = [x["id"] for x in starred]
 
-    gists = web.post(url="https://api.github.com/users/{u}/gists".format(u=username),headers=headers).json()
+    gists = web.post(url="https://api.github.com/users/{u}/gists?per_page=100000".format(u=username),headers=headers).json()
     gist_ids = [x["id"] for x in gists]
-
     all_gists = list(set(starred_ids + gist_ids))
     # Load gists:
     gists = [web.post(url="https://api.github.com/gists/" + i,headers=headers).json() for i in all_gists]
+    #for i in gists:
+    #    print i 
     # Check if starred
     for gist in gists:
         if gist["id"] in starred_ids:
@@ -34,6 +35,7 @@ def get_gist():
         #    gist["forked"] = True
         #else:
         #    gist["forked"] = False
+
     return gists
 
 
