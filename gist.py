@@ -7,7 +7,7 @@ from collections import Counter
 from pprint import pprint as pp
 from workflow.background import run_in_background, is_running
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 
 def main(wf):
@@ -113,7 +113,6 @@ def main(wf):
         if search != "":
             results = wf.filter(search, results, lambda x: x["description"] + ' '.join(x["tags"]) + ' '.join(x["files"].keys()))
         for gist in results:
-            #print gists
             for filename, f in gist["files"].items():
                 if lang == "" or f["language"] == lang:
                     wf.add_item(gist["description"],
