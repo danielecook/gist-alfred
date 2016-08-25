@@ -117,7 +117,7 @@ def main(wf):
                 if lang == "" or f["language"] == lang:
                     wf.add_item(gist["description"],
                     filename + " | " + f["content"].replace("\n"," "),
-                    arg=f["content"], 
+                    arg=gist["html_url"] + "@@@gist@@@" + f["content"],
                     copytext=gist["url"],
                     valid = True,
                     icon="icons/" + str(f["language"]) + ".png")
