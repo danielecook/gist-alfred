@@ -7,7 +7,7 @@ from collections import Counter
 from pprint import pprint as pp
 from workflow.background import run_in_background, is_running
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 def main(wf):
