@@ -34,6 +34,10 @@ def main(wf):
         sys.exit()
 
     gists = wf.stored_data('gists')
+    n_starred = wf.stored_data('n_starred')
+    n_forked = wf.stored_data('n_forked')
+    n_public = wf.stored_data('n_public')
+    n_private = wf.stored_data('n_private')
     lang = "" # Multi-file gist language filtering
 
     tag_set = []
@@ -54,12 +58,12 @@ def main(wf):
     if term == "":
         show_results = False
         # List Options
-        wf.add_item("Starred", autocomplete = u"\u2605 ", icon="icons/star.png")
-        # wf.add_item("Forked", autocomplete = u"\u2442", icon="icons/forked.png") # Forked not presently supported.
+        wf.add_item(u"Starred (%s)" % n_starred, autocomplete = u"\u2605 ", icon="icons/star.png")
+        wf.add_item("Forked (%s)" % n_forked, autocomplete = u"\u2442", icon="icons/forked.png") # Forked not presently supported.
         wf.add_item("Tags", autocomplete = "#", icon="icons/tag.png")
         wf.add_item("Language", autocomplete = "$", icon="icons/language.png")
-        wf.add_item("Private", autocomplete = "Private ", icon="icons/private.png")
-        wf.add_item("Public", autocomplete = "Public ", icon="icons/public.png")
+        wf.add_item("Private (%s)" % n_private, autocomplete = "Private ", icon="icons/private.png")
+        wf.add_item("Public (%s)" % n_public, autocomplete = "Public ", icon="icons/public.png")
         wf.add_item("Reload", autocomplete = "Reload", icon="icons/download.png")
     elif term == "Reload":
         run_in_background('update',['/usr/bin/python', wf.workflowfile('update_gists.py')])
@@ -98,9 +102,9 @@ def main(wf):
     elif term == "Private":
         # List Private
         results = [x for x in gists if x["public"] == False]
-    #elif term == u"\u2442" or term == "Forked":
-    #    # List Private
-    #    results = [x for x in gists if x["forked"] == True]
+    elif term == u"\u2442" or term == "Forked":
+        # List Private
+        results = [x for x in gists if x["forks"]]
     elif term == u"\u2605" or term == "Starred":
         # List Private
         results = [x for x in gists if x["starred"] == True]
