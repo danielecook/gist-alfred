@@ -45,7 +45,7 @@ def main(wf):
     tag_counts = Counter(tags).most_common()
     tag_counts = OrderedDict(tag_counts)
     wf.store_data('tag_counts', tag_counts)
-    language_counts = Counter([x['language'] for x in gist_set]).most_common()
+    language_counts = Counter([x['language'] for x in gist_set if x['language']]).most_common()
     language_counts = OrderedDict(language_counts)
     wf.store_data('language_counts', language_counts)
 
