@@ -33,7 +33,10 @@ def main(wf):
         # Join content of gist files together for searching
         gist_item['content'] = ' '.join([x.content for x in gist.files.values() if x.content])
         gist_set.append(gist_item)
-        gist_item['language'] = gist_item['files'].values()[0]['language'].replace(" ", "-")
+        try:
+            gist_item['language'] = gist_item['files'].values()[0]['language'].replace(" ", "-")
+        except AttributeError:
+            gist_item['language'] = ""
 
         wf.store_data('current_gist', n)
         wf.store_data('total_gists', len(user_gists))
