@@ -8,21 +8,8 @@ from workflow.background import run_in_background, is_running
 
 
 wf = Workflow()
-
-
-
 arg = wf.args[0]
-#arg = wf.args[0]
-
-
-if arg.startswith("Username:"):
-    username = arg.split(":")[1]
-    wf.store_data("Username", username)
-    arg = "Saved " + arg
-elif arg.startswith("Token:"):
-    token = arg.split(":")[1]
-    wf.save_password('Token',token)
-
-wf.send_feedback()
-
-
+if len(arg) > 0:
+    token = arg
+    wf.save_password('GitHub-gist-alfred-token', token)
+    wf.send_feedback()

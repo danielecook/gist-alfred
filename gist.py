@@ -2,36 +2,59 @@
 # encoding: utf-8
 
 import sys
+import workflow
+import os
 from workflow import Workflow, web
 from collections import Counter
-from pprint import pprint as pp
 from workflow.background import run_in_background, is_running
+from subprocess import Popen
+from datetime import datetime
 
-__version__ = '0.4'
+__version__ = '0.5'
 
 
 def main(wf):
-    if wf.args != []:
-        arg = wf.args[0].split(" ")
-    else:
-        arg = ["#VCF","l"]
+    arg = wf.args[0].split(" ")
     term = arg[0].strip()
     search = ' '.join(arg[1:])
     show_results = True
-    if wf.stored_data('gists') == None:
-        run_in_background('update',['/usr/bin/python', wf.workflowfile('update_gists.py')])
-    # Add a notification if the script is running
-    if is_running('update'):
-        username = wf.stored_data("Username")
-        if username is None:
-            wf.add_item("Set your github username with gg_set", icon="icons/info.png")
-        try: 
-            wf.get_password("Token")
-        except:
-            wf.add_item("Set your github-token with gg_set", icon="icons/info.png")
-        wf.add_item('Downloading Latests Gists. This may take a bit.', icon="icons/download.png")
+
+    try: 
+        wf.get_password("GitHub-gist-alfred-token")
+    except workflow.PasswordNotFound:
+        wf.add_item("Set A GitHub Token with 'gg_set <token>'", icon="icons/error.png")
         wf.send_feedback()
         sys.exit()
+
+    # Get last update
+    last_update = wf.stored_data('last_update')
+    diff = (datetime.now() - last_update).seconds
+
+    # Update daily
+    if diff > 60*60*24:
+        if not is_running(u"update_gists"):
+            run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            wf.add_item('Gist Update Triggered', icon="icons/download.png")
+
+    if is_running(u"update_gists"):
+        n = wf.stored_data('current_gist')
+        total = wf.stored_data('total_gists')
+        if n:
+            status = 'Gists are being updated ({}/{}; {}%)'.format(n, total, int((n*1.0/total)*100))
+        else:
+            status = "Gists are being updated"
+        wf.add_item(status, icon="icons/download.png")
+
+
+    # Initial Load
+    if wf.stored_data('gists') is None:
+        wf.add_item(status, icon="icons/download.png")
+        wf.send_feedback()
+        if not is_running(u"update_gists"):
+            run_in_background(u"update_gists",['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            # Exit for initial
+            sys.exit()
+
 
     gists = wf.stored_data('gists')
     n_starred = wf.stored_data('n_starred')
@@ -40,41 +63,33 @@ def main(wf):
     n_private = wf.stored_data('n_private')
     lang = "" # Multi-file gist language filtering
 
-    tag_set = []
-    lang_set = []
-    for gist in gists:
-        # fails if no description. to fix:
-        if not gist["description"]:
-            gist["description"]=''
-        tags = list(set([x.replace("#","") for x in gist["description"].split(" ") if x.startswith("#")]))
-        gist["tags"] = tags
-        tag_set.extend(tags)
-        lang_files = [str(x["language"]) for x in gist["files"].values()]
-        gist["langs"] = lang_files
-        lang_set.extend(lang_files)
+    tag_set = wf.stored_data('tag_counts')
+    lang_set = wf.stored_data('language_counts')
 
     results = []
+    log.debug(term)
 
     if term == "":
         show_results = False
         # List Options
+        wf.add_item(u"Create Gist", valid=True, arg='__new_gist', icon="icons/gist.png")
         wf.add_item(u"Starred (%s)" % n_starred, autocomplete = u"\u2605 ", icon="icons/star.png")
-        wf.add_item("Forked (%s)" % n_forked, autocomplete = u"\u2442", icon="icons/forked.png") # Forked not presently supported.
-        wf.add_item("Tags", autocomplete = "#", icon="icons/tag.png")
-        wf.add_item("Language", autocomplete = "$", icon="icons/language.png")
-        wf.add_item("Private (%s)" % n_private, autocomplete = "Private ", icon="icons/private.png")
-        wf.add_item("Public (%s)" % n_public, autocomplete = "Public ", icon="icons/public.png")
-        wf.add_item("Reload", autocomplete = "Reload", icon="icons/download.png")
-    elif term == "Reload":
-        run_in_background('update',['/usr/bin/python', wf.workflowfile('update_gists.py')])
-        wf.add_item('Downloading Latests Gists. This may take a bit.', icon="icons/download.png")
-        wf.send_feedback()
-        sys.exit()
+        wf.add_item(u"Forked (%s)" % n_forked, autocomplete = u"\u2442 ", icon="icons/forked.png") # Forked not presently supported.
+        wf.add_item(u"Tags", autocomplete = "#", icon="icons/tag.png")
+        wf.add_item(u"Language", autocomplete = "$", icon="icons/language.png")
+        wf.add_item(u"Private (%s)" % n_private, autocomplete = "Private ", icon="icons/private.png")
+        wf.add_item(u"Public (%s)" % n_public, autocomplete = "Public ", icon="icons/public.png")
+        wf.add_item(u"Update (last update: {})".format(last_update.strftime("%Y-%m-%d %H:%M")), autocomplete = "Update", icon="icons/download.png")
+    elif term == "Update":
+        if not is_running(u"update_gists"):
+            run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            wf.add_item('Updating Gists', icon="icons/download.png")
+            wf.send_feedback()
+            sys.exit()
     elif term.startswith("#") and term.replace("#","") not in tag_set and len(search) == 0:
         show_results = False
         tag_set = Counter(tag_set)
         tag_search = tag_set.items()
-        tag_search = sorted(tag_search, key=lambda x: x[0].lower())
         for tag, count in tag_search:
             if tag.lower().startswith(term.lower().replace("#","")):
                 results.append(0) # Prevent no results found from being shown.
@@ -85,17 +100,17 @@ def main(wf):
         results = [x for x in gists if tag in x["tags"]]
     elif term.startswith("$") and term.replace("$","") not in lang_set and len(search) == 0:
         show_results = False
-        lang_set = Counter(lang_set)
         lang_search = lang_set.items()
-        lang_search = sorted(lang_search, key=lambda x: x[0].lower())
         for lang, count in lang_search:
             if lang.lower().startswith(term.lower().replace("$","")):
                 results.append(0) # Prevent no results found from being shown.
-                wf.add_item("{lang} ({count})".format(**locals()), autocomplete = "$" + lang + " ", icon="icons/{lang}.png".format(lang=lang))
+                wf.add_item("{lang} ({count})".format(**locals()),
+                             autocomplete = "${} ".format(lang),
+                             icon="icons/{}.png".format(lang.lower()))
     elif term.replace("$","") in lang_set:
         # List Gist
-        lang = term.split(" ")[0].replace("$","")
-        results = [x for x in gists if lang in x["langs"]]
+        language = term.split(" ")[0].replace("$","").lower()
+        results = [x for x in gists if language == x["language"].lower()]
     elif term == "Public":
         # List Public
         results = [x for x in gists if x["public"] == True]
@@ -103,10 +118,10 @@ def main(wf):
         # List Private
         results = [x for x in gists if x["public"] == False]
     elif term == u"\u2442" or term == "Forked":
-        # List Private
-        results = [x for x in gists if x["forks"]]
+        # List Forked
+        results = [x for x in gists if x["forked"]]
     elif term == u"\u2605" or term == "Starred":
-        # List Private
+        # List Starred
         results = [x for x in gists if x["starred"] == True]
     else:
         # Perform search
@@ -117,17 +132,27 @@ def main(wf):
         if search != "":
             results = wf.filter(search, results, lambda x: x["description"] + ' '.join(x["tags"]) + ' '.join(x["files"].keys()))
         for gist in results:
-            for filename, f in gist["files"].items():
-                if lang == "" or f["language"] == lang:
-                    wf.add_item(gist["description"],
-                    filename + " | " + f["content"].replace("\n"," "),
-                    arg=gist["html_url"] + "@@@gist@@@" + f["content"],
-                    copytext=gist["url"],
-                    valid = True,
-                    icon="icons/" + str(f["language"]) + ".png")
+            filename, f = gist['files'].items()[0]
+            filename, extension = os.path.splitext(filename)
+            extension = extension.strip(".")
+            if lang == "" or f["language"] == lang:
+                if len(gist['content']) > 10000:
+                    gist['content'] = "Unfortunately, this gist is too long to copy; Use CMD to get URL"
+                    wf.add_item(gist['description'],
+                                filename + " | " + gist["content"].replace("\n", "")[0:100],
+                                arg=gist["html_url"] + "@@@gist@@@" + gist["content"],
+                                copytext=gist["url"],
+                                valid = False,
+                                icon="icons/error.png".format(extension.lower()))
+                else:
+                    wf.add_item(gist['description'],
+                                filename + " | " + gist["content"].replace("\n", "")[0:100],
+                                arg=gist["html_url"] + "@@@gist@@@" + gist["content"],
+                                copytext=gist["url"],
+                                valid = True,
+                                icon="icons/{}.png".format(extension.lower()))
     if len(results) == 0 and term != "":
         wf.add_item("No Results Found", valid=True, icon="icons/error.png")
-
     wf.send_feedback()
 
 
