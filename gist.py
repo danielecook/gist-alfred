@@ -103,7 +103,7 @@ def main(wf):
         results = [x for x in gists if tag in x["tags"]]
     elif term.startswith("$") and term.replace("$","") not in lang_set and len(search) == 0:
         show_results = False
-        for lang, count in lang_search.items():
+        for lang, count in lang_set.items():
             if lang.lower().startswith(term.lower().replace("$","")):
                 results.append(0) # Prevent no results found from being shown.
                 wf.add_item("{lang} ({count})".format(**locals()),
