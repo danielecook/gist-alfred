@@ -638,7 +638,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>gg_set_token</string>
+				<string>gg_set</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -658,7 +658,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>gg_set_token &lt;token&gt;</string>
+				<string>gg_set &lt;token&gt;</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>

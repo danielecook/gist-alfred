@@ -18,7 +18,7 @@ def main(wf):
     gh = Github(login_or_token=token)
     gh_user = gh.get_user()
     gist_set = []
-    user_gists = list(gh_user.get_gists())[0:20]
+    user_gists = list(gh_user.get_gists())
     for n, gist in enumerate(user_gists):
         log.info(gist)
         gist_item = {}

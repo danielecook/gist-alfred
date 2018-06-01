@@ -28,15 +28,31 @@ def main(wf):
 
     # Get last update
     last_update = wf.stored_data('last_update')
-    diff = (datetime.now() - last_update).seconds
+    if last_update:
+        diff = (datetime.now() - last_update).seconds
 
-    # Update daily
-    if diff > 60*60*24:
+        # Update daily
+        if diff > 60*60*24:
+            if not is_running(u"update_gists"):
+                run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
+                wf.add_item('Gist Update Triggered', icon="icons/download.png")
+
+    # Initial Load
+    if wf.stored_data('gists') is None:
+        n = wf.stored_data('current_gist')
+        total = wf.stored_data('total_gists')
+        if n:
+            status = 'Gists are being updated ({}/{}; {}%)'.format(n, total, int((n*1.0/total)*100))
+        else:
+            status = "Gists are being updated"
+        wf.add_item(status, icon="icons/download.png")
+        wf.send_feedback()
         if not is_running(u"update_gists"):
-            run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
-            wf.add_item('Gist Update Triggered', icon="icons/download.png")
+            run_in_background(u"update_gists",['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            # Exit for initial
+        sys.exit()
 
-    if is_running(u"update_gists"):
+    elif is_running(u"update_gists"):
         n = wf.stored_data('current_gist')
         total = wf.stored_data('total_gists')
         if n:
@@ -45,15 +61,6 @@ def main(wf):
             status = "Gists are being updated"
         wf.add_item(status, icon="icons/download.png")
 
-
-    # Initial Load
-    if wf.stored_data('gists') is None:
-        wf.add_item(status, icon="icons/download.png")
-        wf.send_feedback()
-        if not is_running(u"update_gists"):
-            run_in_background(u"update_gists",['/usr/bin/python', wf.workflowfile('update_gists.py')])
-            # Exit for initial
-            sys.exit()
 
 
     gists = wf.stored_data('gists')
