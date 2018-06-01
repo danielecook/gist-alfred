@@ -4,7 +4,7 @@
 
 An alfred workflow for accessing gists as snippets. Features:
 
-* Hot-key for creating new gist <kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>G</kbd>
+* Hot-key for creating new a gist <kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>G</kbd>
 * Full Search
 * Adds tagging and allows filtering by tag
 * Allows filtering and search by programming language.
