@@ -93,9 +93,7 @@ def main(wf):
             sys.exit()
     elif term.startswith("#") and term.replace("#","") not in tag_set and len(search) == 0:
         show_results = False
-        tag_set = Counter(tag_set)
-        tag_search = tag_set.items()
-        for tag, count in tag_search:
+        for tag, count in tag_set.items():
             if tag.lower().startswith(term.lower().replace("#","")):
                 results.append(0) # Prevent no results found from being shown.
                 wf.add_item("{tag} ({count})".format(**locals()), autocomplete = "#" + tag + " ", icon="icons/tag.png")
