@@ -4,6 +4,7 @@
 
 An alfred workflow for accessing gists as snippets. Features:
 
+* Hot-key for creating new gist <kbd>⌘⇧G</kbd>
 * Full Search
 * Adds tagging and allows filtering by tag
 * Allows filtering and search by programming language.

@@ -152,6 +152,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>08E18EAC-4F8D-4220-9755-C2BF27293A0E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>D319CE9E-0DC7-4DD6-9274-3A2B5A5B1C9D</key>
 		<array/>
 		<key>D8D3769A-EA94-498E-9729-3DF921080455</key>
@@ -243,6 +256,37 @@
 	<string>gist</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>5</integer>
+				<key>hotmod</key>
+				<integer>1179648</integer>
+				<key>hotstring</key>
+				<string>G</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -679,150 +723,157 @@
 		<key>0130C1F6-996D-4BFB-BE66-21AF8CAD5F8B</key>
 		<dict>
 			<key>xpos</key>
-			<integer>240</integer>
+			<integer>300</integer>
 			<key>ypos</key>
-			<integer>100</integer>
+			<integer>300</integer>
 		</dict>
 		<key>08E18EAC-4F8D-4220-9755-C2BF27293A0E</key>
 		<dict>
 			<key>xpos</key>
-			<integer>460</integer>
+			<integer>610</integer>
 			<key>ypos</key>
-			<integer>10</integer>
+			<integer>70</integer>
 		</dict>
 		<key>0AFA5D53-1CE7-4E4F-81A3-5193A179FD1E</key>
 		<dict>
 			<key>note</key>
 			<string>get gist</string>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>340</integer>
+			<integer>540</integer>
 		</dict>
 		<key>2EFDCC81-C843-4C86-BA24-21A210ED0594</key>
 		<dict>
 			<key>xpos</key>
-			<integer>320</integer>
+			<integer>380</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>820</integer>
 		</dict>
 		<key>5A004B74-68D2-4928-81E5-91426478F4ED</key>
 		<dict>
 			<key>xpos</key>
-			<integer>240</integer>
+			<integer>300</integer>
 			<key>ypos</key>
-			<integer>210</integer>
+			<integer>410</integer>
 		</dict>
 		<key>75ECA806-504B-4934-AECD-5CDFFF09F0BD</key>
 		<dict>
 			<key>note</key>
 			<string>get URL</string>
 			<key>xpos</key>
-			<integer>350</integer>
+			<integer>410</integer>
 			<key>ypos</key>
-			<integer>460</integer>
+			<integer>660</integer>
 		</dict>
 		<key>78B3D890-4494-4AA6-A8C0-476140DBEF0C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>10</integer>
+			<integer>70</integer>
 			<key>ypos</key>
-			<integer>200</integer>
+			<integer>400</integer>
 		</dict>
 		<key>7BEB5D7A-EBF1-4494-8126-2C42B934C2AA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>680</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>820</integer>
 		</dict>
 		<key>B5BB7EA6-BF63-404E-99C5-3249101CD8D0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>620</integer>
 			<key>ypos</key>
-			<integer>70</integer>
+			<integer>270</integer>
 		</dict>
 		<key>BFFC0408-E89A-4946-946B-EEAB86B6A952</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>620</integer>
 			<key>ypos</key>
-			<integer>430</integer>
+			<integer>630</integer>
+		</dict>
+		<key>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>90</integer>
+			<key>ypos</key>
+			<integer>40</integer>
 		</dict>
 		<key>C9524867-33F5-4787-865B-81C66BD28334</key>
 		<dict>
 			<key>xpos</key>
-			<integer>700</integer>
+			<integer>760</integer>
 			<key>ypos</key>
-			<integer>70</integer>
+			<integer>270</integer>
 		</dict>
 		<key>D0E44D53-D064-4E1C-AC01-1E7F70F39B08</key>
 		<dict>
 			<key>xpos</key>
-			<integer>700</integer>
+			<integer>760</integer>
 			<key>ypos</key>
-			<integer>430</integer>
+			<integer>630</integer>
 		</dict>
 		<key>D319CE9E-0DC7-4DD6-9274-3A2B5A5B1C9D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>620</integer>
 			<key>ypos</key>
-			<integer>190</integer>
+			<integer>390</integer>
 		</dict>
 		<key>D8D3769A-EA94-498E-9729-3DF921080455</key>
 		<dict>
 			<key>xpos</key>
-			<integer>20</integer>
+			<integer>80</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>820</integer>
 		</dict>
 		<key>D8FE108B-E884-4963-8533-3A088539840C</key>
 		<dict>
 			<key>note</key>
 			<string>get gist</string>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>100</integer>
+			<integer>300</integer>
 		</dict>
 		<key>DB6DA861-4AB8-49DB-BB0C-16B39AF72B39</key>
 		<dict>
 			<key>xpos</key>
-			<integer>230</integer>
+			<integer>290</integer>
 			<key>ypos</key>
-			<integer>20</integer>
+			<integer>160</integer>
 		</dict>
 		<key>E389705F-CC13-4E60-8B76-27A754C84DAE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>260</integer>
+			<integer>320</integer>
 			<key>ypos</key>
-			<integer>340</integer>
+			<integer>540</integer>
 		</dict>
 		<key>EDC85484-8D6A-4179-B251-20B622C19852</key>
 		<dict>
 			<key>note</key>
 			<string>get URL</string>
 			<key>xpos</key>
-			<integer>360</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>220</integer>
+			<integer>420</integer>
 		</dict>
 		<key>EE8E5A2E-9AB1-443B-8A89-A23688389B7A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>620</integer>
 			<key>ypos</key>
-			<integer>310</integer>
+			<integer>510</integer>
 		</dict>
 		<key>FA4E59F6-C3E5-4299-A266-66ECEA06ECCC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>240</integer>
+			<integer>300</integer>
 			<key>ypos</key>
-			<integer>460</integer>
+			<integer>660</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

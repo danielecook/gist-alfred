@@ -10,7 +10,7 @@ from workflow.background import run_in_background, is_running
 from subprocess import Popen
 from datetime import datetime
 
-__version__ = '0.6'
+__version__ = '0.7'
 
 
 def main(wf):
