@@ -10,7 +10,7 @@ from workflow.background import run_in_background, is_running
 from subprocess import Popen
 from datetime import datetime
 
-__version__ = '0.5'
+__version__ = '0.6'
 
 
 def main(wf):
@@ -84,7 +84,11 @@ def main(wf):
         wf.add_item(u"Language", autocomplete = "$", icon="icons/language.png")
         wf.add_item(u"Private (%s)" % n_private, autocomplete = "Private ", icon="icons/private.png")
         wf.add_item(u"Public (%s)" % n_public, autocomplete = "Public ", icon="icons/public.png")
-        wf.add_item(u"Update (last update: {})".format(last_update.strftime("%Y-%m-%d %H:%M")), autocomplete = "Update", icon="icons/download.png")
+        if last_update is None:
+            last_update_msg = "Never"
+        else: 
+            last_update_msg = last_update.strftime("%Y-%m-%d %H:%M")
+        wf.add_item(u"Update (last update: {})".format(last_update_msg), autocomplete = "Update", icon="icons/download.png")
     elif term == "Update":
         if not is_running(u"update_gists"):
             run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
