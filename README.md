@@ -12,8 +12,7 @@ An alfred workflow for accessing gists as snippets. Features:
 
 __Setup__
 
-Type gg_set and enter a username and [personal access token](https://github.com/blog/1509-personal-api-tokens) from github.
-
+Type `gg_set` and enter a [personal access token](https://github.com/blog/1509-personal-api-tokens) from github. The workflow takes some time to load new snippets because of the way the gist API is set up.
 
 __Implements tags using #__
 
