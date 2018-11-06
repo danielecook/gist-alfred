@@ -15,6 +15,10 @@ __Setup__
 
 Type `gg_set` and enter a [personal access token](https://github.com/blog/1509-personal-api-tokens) from github. The workflow takes some time to load new snippets because of the way the gist API is set up.
 
+Set the permissions of your token as shown below:
+
+![token](https://user-images.githubusercontent.com/1536935/47913031-725ba400-de92-11e8-80a3-8a5f3b4c9db3.png)
+
 __Implements tags using #__
 
 ![Filter by tag](img/filter_tag.png)
