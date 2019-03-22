@@ -4,8 +4,6 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.danielecook.gist</string>
-	<key>category</key>
-	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>0130C1F6-996D-4BFB-BE66-21AF8CAD5F8B</key>
@@ -13,6 +11,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>D8FE108B-E884-4963-8533-3A088539840C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>09AA9E0F-4DFE-4795-8EFC-9573676354D1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>CCAF9D59-0EF4-4E9F-9802-2C282288DCE2</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -34,11 +45,70 @@
 				<false/>
 			</dict>
 		</array>
+		<key>1E035C70-299B-4923-854A-9D81F932D15A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2D4BC701-EC1A-4959-AEB6-7333729B07AE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1E035C70-299B-4923-854A-9D81F932D15A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>7CA1D3AC-E1BC-451E-9AD6-96B7E97BFA89</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>2EFDCC81-C843-4C86-BA24-21A210ED0594</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>7BEB5D7A-EBF1-4494-8126-2C42B934C2AA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>420E768F-B25D-4C3B-A503-81D757BBA861</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A0599C60-99B5-49C9-ACD0-07CC51A8291C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>851C6003-BAA5-42D9-9E4E-5EFA49D43B11</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -87,6 +157,16 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
+				<string>E5173D96-F96D-488C-BE4E-1562155C0F1C</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Create private gist</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
 				<string>0130C1F6-996D-4BFB-BE66-21AF8CAD5F8B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
@@ -126,6 +206,58 @@
 				<false/>
 			</dict>
 		</array>
+		<key>7CA1D3AC-E1BC-451E-9AD6-96B7E97BFA89</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>851C6003-BAA5-42D9-9E4E-5EFA49D43B11</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A0599C60-99B5-49C9-ACD0-07CC51A8291C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B01D954F-A0F3-4786-968C-DA8FA0D2119A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>09AA9E0F-4DFE-4795-8EFC-9573676354D1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B5BB7EA6-BF63-404E-99C5-3249101CD8D0</key>
 		<array>
 			<dict>
@@ -144,19 +276,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>D0E44D53-D064-4E1C-AC01-1E7F70F39B08</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>08E18EAC-4F8D-4220-9755-C2BF27293A0E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -197,7 +316,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>08E18EAC-4F8D-4220-9755-C2BF27293A0E</string>
+				<string>7CA1D3AC-E1BC-451E-9AD6-96B7E97BFA89</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -211,6 +330,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>0AFA5D53-1CE7-4E4F-81A3-5193A179FD1E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>E5173D96-F96D-488C-BE4E-1562155C0F1C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>851C6003-BAA5-42D9-9E4E-5EFA49D43B11</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -249,7 +381,7 @@
 	<key>createdby</key>
 	<string>Daniel E. Cook</string>
 	<key>description</key>
-	<string>Search gists on github</string>
+	<string>Create and search gists on GitHub</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -259,50 +391,149 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>5</integer>
-				<key>hotmod</key>
-				<integer>1179648</integer>
-				<key>hotstring</key>
-				<string>G</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
+				<key>acceptsmulti</key>
+				<true/>
+				<key>filetypes</key>
+				<array/>
+				<key>name</key>
+				<string>Create gist</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
+			<string>alfred.workflow.trigger.action</string>
 			<key>uid</key>
-			<string>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</string>
+			<string>2D4BC701-EC1A-4959-AEB6-7333729B07AE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{query}</string>
+				<key>variables</key>
+				<dict>
+					<key>GIST_PUBLIC</key>
+					<string>1</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>1E035C70-299B-4923-854A-9D81F932D15A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>acceptsmulti</key>
+				<true/>
+				<key>filetypes</key>
+				<array/>
+				<key>name</key>
+				<string>Create private gist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.action</string>
+			<key>uid</key>
+			<string>420E768F-B25D-4C3B-A503-81D757BBA861</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{query}</string>
+				<key>variables</key>
+				<dict>
+					<key>GIST_PUBLIC</key>
+					<string>0</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>A0599C60-99B5-49C9-ACD0-07CC51A8291C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>116</integer>
+				<key>script</key>
+				<string>python set_info.py "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>create_gist.py</string>
+				<key>type</key>
+				<integer>8</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>https://gist.github.com/</string>
-				<key>utf8</key>
-				<true/>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
+			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
-			<string>08E18EAC-4F8D-4220-9755-C2BF27293A0E</string>
+			<string>09AA9E0F-4DFE-4795-8EFC-9573676354D1</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>URL copied to clipboard.</string>
+				<key>title</key>
+				<string>Gist created</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>CCAF9D59-0EF4-4E9F-9802-2C282288DCE2</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>variables</key>
+				<dict>
+					<key>GIST_PUBLIC</key>
+					<string>1</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>7CA1D3AC-E1BC-451E-9AD6-96B7E97BFA89</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -322,6 +553,43 @@
 			<string>alfred.workflow.utility.filter</string>
 			<key>uid</key>
 			<string>DB6DA861-4AB8-49DB-BB0C-16B39AF72B39</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>inputstring</key>
+				<string>{query}</string>
+				<key>matchcasesensitive</key>
+				<true/>
+				<key>matchmode</key>
+				<integer>0</integer>
+				<key>matchstring</key>
+				<string>__new_gist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.filter</string>
+			<key>uid</key>
+			<string>E5173D96-F96D-488C-BE4E-1562155C0F1C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>variables</key>
+				<dict>
+					<key>GIST_PUBLIC</key>
+					<string>0</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>851C6003-BAA5-42D9-9E4E-5EFA49D43B11</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -352,9 +620,9 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>{query}</string>
+				<string>Contents copied to clipboard.</string>
 				<key>title</key>
-				<string>Copied</string>
+				<string>Gist fetched</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -402,6 +670,53 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>116</integer>
+				<key>keyword</key>
+				<string>gist</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>python gist.py "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>gist.py</string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Access GitHub gists</string>
+				<key>type</key>
+				<integer>8</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>78B3D890-4494-4AA6-A8C0-476140DBEF0C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>browser</key>
 				<string></string>
 				<key>spaces</key>
@@ -417,53 +732,6 @@
 			<string>D319CE9E-0DC7-4DD6-9274-3A2B5A5B1C9D</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>116</integer>
-				<key>keyword</key>
-				<string>gg</string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string></string>
-				<key>script</key>
-				<string>python gist.py "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search code snippets</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>78B3D890-4494-4AA6-A8C0-476140DBEF0C</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -577,9 +845,9 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>{query}</string>
+				<string>URL copied to clipboard.</string>
 				<key>title</key>
-				<string>Copied</string>
+				<string>Gist fetched</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -634,11 +902,11 @@
 				<key>script</key>
 				<string>python set_info.py "{query}"</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
-				<string></string>
+				<string>set_info.py</string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>8</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
@@ -682,7 +950,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>gg_set</string>
+				<string>gist_set</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -694,17 +962,17 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>python gg_set.py "{query}"</string>
+				<string>python gist_set.py "{query}"</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
-				<string></string>
+				<string>gist_set.py</string>
 				<key>subtext</key>
-				<string></string>
+				<string>gist_set &lt;token&gt;</string>
 				<key>title</key>
-				<string>gg_set &lt;token&gt;</string>
+				<string>Set gist token</string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>8</integer>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -723,157 +991,213 @@
 		<key>0130C1F6-996D-4BFB-BE66-21AF8CAD5F8B</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>250</integer>
 			<key>ypos</key>
-			<integer>300</integer>
+			<integer>410</integer>
 		</dict>
-		<key>08E18EAC-4F8D-4220-9755-C2BF27293A0E</key>
+		<key>09AA9E0F-4DFE-4795-8EFC-9573676354D1</key>
 		<dict>
 			<key>xpos</key>
-			<integer>610</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>70</integer>
+			<integer>260</integer>
 		</dict>
 		<key>0AFA5D53-1CE7-4E4F-81A3-5193A179FD1E</key>
 		<dict>
 			<key>note</key>
 			<string>get gist</string>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>540</integer>
+			<integer>650</integer>
+		</dict>
+		<key>1E035C70-299B-4923-854A-9D81F932D15A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>50</integer>
+		</dict>
+		<key>2D4BC701-EC1A-4959-AEB6-7333729B07AE</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>20</integer>
 		</dict>
 		<key>2EFDCC81-C843-4C86-BA24-21A210ED0594</key>
 		<dict>
 			<key>xpos</key>
-			<integer>380</integer>
+			<integer>330</integer>
 			<key>ypos</key>
-			<integer>820</integer>
+			<integer>910</integer>
+		</dict>
+		<key>420E768F-B25D-4C3B-A503-81D757BBA861</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>140</integer>
 		</dict>
 		<key>5A004B74-68D2-4928-81E5-91426478F4ED</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>250</integer>
 			<key>ypos</key>
-			<integer>410</integer>
+			<integer>530</integer>
 		</dict>
 		<key>75ECA806-504B-4934-AECD-5CDFFF09F0BD</key>
 		<dict>
 			<key>note</key>
 			<string>get URL</string>
 			<key>xpos</key>
-			<integer>410</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>660</integer>
+			<integer>770</integer>
 		</dict>
 		<key>78B3D890-4494-4AA6-A8C0-476140DBEF0C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>70</integer>
+			<integer>20</integer>
 			<key>ypos</key>
-			<integer>400</integer>
+			<integer>500</integer>
 		</dict>
 		<key>7BEB5D7A-EBF1-4494-8126-2C42B934C2AA</key>
 		<dict>
 			<key>xpos</key>
-			<integer>680</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>820</integer>
+			<integer>910</integer>
+		</dict>
+		<key>7CA1D3AC-E1BC-451E-9AD6-96B7E97BFA89</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>270</integer>
+		</dict>
+		<key>851C6003-BAA5-42D9-9E4E-5EFA49D43B11</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>320</integer>
+		</dict>
+		<key>A0599C60-99B5-49C9-ACD0-07CC51A8291C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>320</integer>
+			<key>ypos</key>
+			<integer>170</integer>
+		</dict>
+		<key>B01D954F-A0F3-4786-968C-DA8FA0D2119A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>410</integer>
+			<key>ypos</key>
+			<integer>260</integer>
 		</dict>
 		<key>B5BB7EA6-BF63-404E-99C5-3249101CD8D0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>270</integer>
+			<integer>380</integer>
 		</dict>
 		<key>BFFC0408-E89A-4946-946B-EEAB86B6A952</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>630</integer>
-		</dict>
-		<key>C3A4EB00-7B2E-4A34-BF3A-E287BC08593F</key>
-		<dict>
-			<key>xpos</key>
-			<integer>90</integer>
-			<key>ypos</key>
-			<integer>40</integer>
+			<integer>740</integer>
 		</dict>
 		<key>C9524867-33F5-4787-865B-81C66BD28334</key>
 		<dict>
 			<key>xpos</key>
-			<integer>760</integer>
+			<integer>710</integer>
 			<key>ypos</key>
-			<integer>270</integer>
+			<integer>380</integer>
+		</dict>
+		<key>CCAF9D59-0EF4-4E9F-9802-2C282288DCE2</key>
+		<dict>
+			<key>xpos</key>
+			<integer>710</integer>
+			<key>ypos</key>
+			<integer>260</integer>
 		</dict>
 		<key>D0E44D53-D064-4E1C-AC01-1E7F70F39B08</key>
 		<dict>
 			<key>xpos</key>
-			<integer>760</integer>
+			<integer>710</integer>
 			<key>ypos</key>
-			<integer>630</integer>
+			<integer>740</integer>
 		</dict>
 		<key>D319CE9E-0DC7-4DD6-9274-3A2B5A5B1C9D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>390</integer>
+			<integer>500</integer>
 		</dict>
 		<key>D8D3769A-EA94-498E-9729-3DF921080455</key>
 		<dict>
 			<key>xpos</key>
-			<integer>80</integer>
+			<integer>20</integer>
 			<key>ypos</key>
-			<integer>820</integer>
+			<integer>910</integer>
 		</dict>
 		<key>D8FE108B-E884-4963-8533-3A088539840C</key>
 		<dict>
 			<key>note</key>
 			<string>get gist</string>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>300</integer>
+			<integer>410</integer>
 		</dict>
 		<key>DB6DA861-4AB8-49DB-BB0C-16B39AF72B39</key>
 		<dict>
 			<key>xpos</key>
-			<integer>290</integer>
+			<integer>250</integer>
 			<key>ypos</key>
-			<integer>160</integer>
+			<integer>270</integer>
 		</dict>
 		<key>E389705F-CC13-4E60-8B76-27A754C84DAE</key>
 		<dict>
 			<key>xpos</key>
-			<integer>320</integer>
+			<integer>250</integer>
 			<key>ypos</key>
-			<integer>540</integer>
+			<integer>650</integer>
+		</dict>
+		<key>E5173D96-F96D-488C-BE4E-1562155C0F1C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>250</integer>
+			<key>ypos</key>
+			<integer>320</integer>
 		</dict>
 		<key>EDC85484-8D6A-4179-B251-20B622C19852</key>
 		<dict>
 			<key>note</key>
 			<string>get URL</string>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>370</integer>
 			<key>ypos</key>
-			<integer>420</integer>
+			<integer>530</integer>
 		</dict>
 		<key>EE8E5A2E-9AB1-443B-8A89-A23688389B7A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>570</integer>
 			<key>ypos</key>
-			<integer>510</integer>
+			<integer>620</integer>
 		</dict>
 		<key>FA4E59F6-C3E5-4299-A266-66ECEA06ECCC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>250</integer>
 			<key>ypos</key>
-			<integer>660</integer>
+			<integer>770</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>
