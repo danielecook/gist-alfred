@@ -16,7 +16,7 @@ __Setup__
 
 Type `gg_set` and enter a username and [personal access token](https://github.com/blog/1509-personal-api-tokens) from GitHub.
 
-Set the permissions to the following:
+Set the permissions to the following - __Important__ you must set these permissions for all functionality to work:
 
 ![Scopes](img/scopes.png)
 
