@@ -6,6 +6,7 @@ An Alfred workflow for accessing gists as snippets. Features:
 
 * Full-text search of gists.
 * Creation of gists from clipboard contents.
+* Creation of gists from text files.
 * Support for tagging and filtering by tag.
 * Filtering and searching of gists by programming language.
 * Filtering by starred, public, and private gists.
@@ -13,7 +14,11 @@ An Alfred workflow for accessing gists as snippets. Features:
 
 __Setup__
 
-Type `gist_set` and enter a username and [personal access token](https://github.com/blog/1509-personal-api-tokens) from GitHub.
+Type `gg_set` and enter a username and [personal access token](https://github.com/blog/1509-personal-api-tokens) from GitHub.
+
+Set the permissions to the following:
+
+![Scopes](img/scopes.png)
 
 __Tagging using using #__
 

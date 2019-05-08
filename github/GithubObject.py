@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Andrew Scheller <github@loowis.durge.org>                     #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Jakub Wilk <jwilk@jwilk.net>                                  #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2016 Sam Corbett <sam.corbett@cloudsoftcorp.com>                   #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -23,7 +30,8 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
+
 import sys
 import datetime
 from operator import itemgetter
@@ -162,7 +170,7 @@ class GithubObject(object):
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
-            elif len(s) == 25:
+            elif len(s) >= 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
@@ -179,6 +187,10 @@ class GithubObject(object):
     @staticmethod
     def _makeListOfIntsAttribute(value):
         return GithubObject.__makeSimpleListAttribute(value, int)
+
+    @staticmethod
+    def _makeListOfDictsAttribute(value):
+        return GithubObject.__makeSimpleListAttribute(value, dict)
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(value):

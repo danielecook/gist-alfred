@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.danielecook.gist</string>
+	<key>category</key>
+	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
 		<key>0130C1F6-996D-4BFB-BE66-21AF8CAD5F8B</key>
@@ -461,29 +463,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>116</integer>
-				<key>script</key>
-				<string>python set_info.py "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string>create_gist.py</string>
-				<key>type</key>
-				<integer>8</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>autopaste</key>
 				<false/>
 				<key>clipboardtext</key>
@@ -518,6 +497,29 @@
 			<string>CCAF9D59-0EF4-4E9F-9802-2C282288DCE2</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>116</integer>
+				<key>script</key>
+				<string>python set_info.py "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>create_gist.py</string>
+				<key>type</key>
+				<integer>8</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B01D954F-A0F3-4786-968C-DA8FA0D2119A</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -681,7 +683,7 @@
 				<key>escaping</key>
 				<integer>116</integer>
 				<key>keyword</key>
-				<string>gist</string>
+				<string>gg</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -736,6 +738,23 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>matchmode</key>
+				<integer>1</integer>
+				<key>matchstring</key>
+				<string>(@@@gist@@@)[\s\S]*</string>
+				<key>replacestring</key>
+				<string></string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.replace</string>
+			<key>uid</key>
+			<string>EDC85484-8D6A-4179-B251-20B622C19852</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>inputstring</key>
 				<string>{query}</string>
 				<key>matchcasesensitive</key>
@@ -749,23 +768,6 @@
 			<string>alfred.workflow.utility.filter</string>
 			<key>uid</key>
 			<string>5A004B74-68D2-4928-81E5-91426478F4ED</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>matchmode</key>
-				<integer>1</integer>
-				<key>matchstring</key>
-				<string>(@@@gist@@@)[\s\S]*</string>
-				<key>replacestring</key>
-				<string></string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.replace</string>
-			<key>uid</key>
-			<string>EDC85484-8D6A-4179-B251-20B622C19852</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -950,7 +952,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>gist_set</string>
+				<string>gg_set</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>

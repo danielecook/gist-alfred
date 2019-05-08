@@ -1,17 +1,31 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
 # Copyright 2012 Philip Kimmey <philip@rover.com>                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 David Farr <david.farr@sap.com>                               #
 # Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Raja Reddy Karri <klnrajareddy@gmail.com>                     #
+# Copyright 2016 @tmshn <tmshn@r.recruit.co.jp>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Matt Babineau <babineaum@users.noreply.github.com>            #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Nicolas Agustín Torres <nicolastrres@gmail.com>              #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Shinichi TAMURA <shnch.tmr@gmail.com>                         #
+# Copyright 2018 Steve Kowalik <steven@wedontsleep.org>                        #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 per1234 <accounts@perglass.com>                               #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -26,7 +40,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import urllib
 import datetime
@@ -40,11 +54,14 @@ import github.NamedUser
 import github.Milestone
 import github.IssueComment
 import github.IssuePullRequest
+import github.Reaction
+
+import Consts
 
 
 class Issue(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Issues as returned for example by http://developer.github.com/v3/todo
+    This class represents Issues. The reference can be found here https://developer.github.com/v3/issues/
     """
 
     def __repr__(self):
@@ -230,6 +247,33 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    @property
+    def locked(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._locked)
+        return self._locked.value
+
+    @property
+    def active_lock_reason(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._active_lock_reason)
+        return self._active_lock_reason.value
+
+    def as_pull_request(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
+        :rtype: :class:`github.PullRequest.PullRequest`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/pulls/".join(self.url.rsplit("/issues/", 1))
+        )
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
+
     def add_to_assignees(self, *assignees):
         """
         :calls: `POST /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
@@ -330,6 +374,32 @@ class Issue(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def lock(self, lock_reason):
+        """
+        :calls: `PUT /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :param lock_reason: string
+        :rtype: None
+        """
+        assert isinstance(lock_reason, (str, unicode)), lock_reason
+        put_parameters = dict()
+        put_parameters["lock_reason"] = lock_reason
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/lock",
+            input=put_parameters,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
+        )
+
+    def unlock(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:issue_number/lock <https://developer.github.com/v3/issues>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/lock"
+        )
+
     def get_comment(self, id):
         """
         :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
@@ -369,7 +439,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/events",
-            None
+            None,
+            headers={'Accept': Consts.mediaTypeLockReasonPreview}
         )
 
     def get_labels(self):
@@ -418,7 +489,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def set_labels(self, *labels):
         """
         :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
-        :param label: :class:`github.Label.Label`
+        :param labels: list of :class:`github.Label.Label` or strings
         :rtype: None
         """
         assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
@@ -428,6 +499,40 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self.url + "/labels",
             input=post_parameters
         )
+
+    def get_reactions(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number/reactions <https://developer.github.com/v3/reactions/#list-reactions-for-an-issue>`_
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Reaction.Reaction,
+            self._requester,
+            self.url + "/reactions",
+            None,
+            headers={'Accept': Consts.mediaTypeReactionsPreview}
+        )
+
+    def create_reaction(self, reaction_type):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/:number/reactions <https://developer.github.com/v3/reactions>`_
+        :param reaction_type: string
+        :rtype: :class:`github.Reaction.Reaction`
+        """
+        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
+            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+
+        post_parameters = {
+            "content": reaction_type,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reactions",
+            input=post_parameters,
+            headers={'Accept': Consts.mediaTypeReactionsPreview}
+        )
+        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
     @property
     def _identity(self):
@@ -458,6 +563,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "active_lock_reason" in attributes:  # pragma no branch
+            self._active_lock_reason = self._makeStringAttribute(attributes["active_lock_reason"])
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
         if "assignees" in attributes:  # pragma no branch
@@ -489,6 +596,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
         if "labels_url" in attributes:  # pragma no branch
             self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+        if "locked" in attributes:  # pragma no branch
+            self._locked = self._makeBoolAttribute(attributes["locked"])
         if "milestone" in attributes:  # pragma no branch
             self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
         if "number" in attributes:  # pragma no branch

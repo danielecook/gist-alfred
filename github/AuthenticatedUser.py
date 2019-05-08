@@ -1,15 +1,29 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 poulp <mathieu.nerv@gmail.com>                                #
+# Copyright 2014 Tomas Radej <tradej@redhat.com>                               #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 E. Dunham <github@edunham.net>                                #
+# Copyright 2016 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Balázs Rostás <rostas.balazs@gmail.com>                       #
+# Copyright 2017 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Wan Liuyang <tsfdye@gmail.com>                                #
+# Copyright 2018 bryanhuntesl <31992054+bryanhuntesl@users.noreply.github.com> #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
+# Copyright 2018 itsbruce <it.is.bruce@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -24,7 +38,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
 import datetime
 
@@ -41,12 +55,15 @@ import github.Issue
 import github.Event
 import github.Authorization
 import github.Notification
+import github.Migration
+
+import Consts
 
 
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
-    This class represents AuthenticatedUsers as returned for example by http://developer.github.com/v3/todo
-    
+    This class represents AuthenticatedUsers as returned by https://developer.github.com/v3/users/#get-the-authenticated-user
+
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
@@ -222,6 +239,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         return self._name.value
 
     @property
+    def node_id(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._node_id)
+        return self._node_id.value
+
+    @property
     def organizations_url(self):
         """
         :type: string
@@ -393,14 +418,15 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_watched(self, watched):
         """
-        :calls: `PUT /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `PUT /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription",
+            input={"subscribed": True}
         )
 
     def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet, onetime_password=None):
@@ -432,7 +458,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         if client_secret is not github.GithubObject.NotSet:
             post_parameters["client_secret"] = client_secret
         if onetime_password is not None:
-            request_header = {'X-GitHub-OTP': onetime_password}  # pragma no cover (Should be covered)
+            request_header = {Consts.headerOTP: onetime_password}  # pragma no cover (Should be covered)
         else:
             request_header = None
         headers, data = self._requester.requestJsonAndCheck(
@@ -469,7 +495,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
+            "files": {key: value._identity for key, value in files.iteritems()},
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
@@ -500,7 +526,12 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
-    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
+    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet,
+                    private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet,
+                    has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet,
+                    has_projects=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, license_template=github.GithubObject.NotSet,
+                    gitignore_template=github.GithubObject.NotSet, allow_squash_merge=github.GithubObject.NotSet,
+                    allow_merge_commit=github.GithubObject.NotSet, allow_rebase_merge=github.GithubObject.NotSet):
         """
         :calls: `POST /user/repos <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -510,8 +541,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param has_issues: bool
         :param has_wiki: bool
         :param has_downloads: bool
+        :param has_projects: bool
         :param auto_init: bool
+        :param license_template: string
         :param gitignore_template: string
+        :param allow_squash_merge: bool
+        :param allow_merge_commit: bool
+        :param allow_rebase_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, (str, unicode)), name
@@ -521,8 +557,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         post_parameters = {
             "name": name,
         }
@@ -538,10 +579,20 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             post_parameters["has_wiki"] = has_wiki
         if has_downloads is not github.GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
+        if has_projects is not github.GithubObject.NotSet:
+            post_parameters["has_projects"] = has_projects
         if auto_init is not github.GithubObject.NotSet:
             post_parameters["auto_init"] = auto_init
+        if license_template is not github.GithubObject.NotSet:
+            post_parameters["license_template"] = license_template
         if gitignore_template is not github.GithubObject.NotSet:
             post_parameters["gitignore_template"] = gitignore_template
+        if allow_squash_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_merge_commit is not github.GithubObject.NotSet:
+            post_parameters["allow_merge_commit"] = allow_merge_commit
+        if allow_rebase_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_rebase_merge"] = allow_rebase_merge
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/repos",
@@ -662,16 +713,21 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
-    def get_gists(self):
+    def get_gists(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /gists <http://developer.github.com/v3/gists>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self._requester,
             "/gists",
-            None
+            url_parameters
         )
 
     def get_issues(self, filter=github.GithubObject.NotSet, state=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
@@ -788,23 +844,30 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Notification.Notification(self._requester, headers, data, completed=True)
 
-    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
+    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet, since=github.GithubObject.NotSet, before=github.GithubObject.NotSet):
         """
         :calls: `GET /notifications <http://developer.github.com/v3/activity/notifications>`_
         :param all: bool
         :param participating: bool
+        :param since: datetime.datetime
+        :param before: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
         """
 
         assert all is github.GithubObject.NotSet or isinstance(all, bool), all
         assert participating is github.GithubObject.NotSet or isinstance(participating, bool), participating
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert before is github.GithubObject.NotSet or isinstance(before, datetime.datetime), before
 
         params = dict()
         if all is not github.GithubObject.NotSet:
             params["all"] = all
         if participating is not github.GithubObject.NotSet:
             params["participating"] = participating
-        # TODO: implement parameter "since"
+        if since is not github.GithubObject.NotSet:
+            params["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if before is not github.GithubObject.NotSet:
+            params["before"] = before.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         return github.PaginatedList.PaginatedList(
             github.Notification.Notification,
@@ -852,18 +915,26 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
+    def get_repos(self, visibility=github.GithubObject.NotSet, affiliation=github.GithubObject.NotSet, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """
-        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`_
+        :calls: `GET /user/repos <http://developer.github.com/v3/repos>`
+        :param visibility: string
+        :param affiliation: string
         :param type: string
         :param sort: string
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
+        assert visibility is github.GithubObject.NotSet or isinstance(visibility, (str, unicode)), visibility
+        assert affiliation is github.GithubObject.NotSet or isinstance(affiliation, (str, unicode)), affiliation
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
         assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
         assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
+        if visibility is not github.GithubObject.NotSet:
+            url_parameters["visibility"] = visibility
+        if affiliation is not github.GithubObject.NotSet:
+            url_parameters["affiliation"] = affiliation
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
         if sort is not github.GithubObject.NotSet:
@@ -927,13 +998,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_watched(self):
         """
-        :calls: `GET /user/watched <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /user/subscriptions <http://developer.github.com/v3/activity/watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            "/user/watched",
+            "/user/subscriptions",
             None
         )
 
@@ -978,16 +1049,32 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_watched(self, watched):
         """
-        :calls: `GET /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(watched, github.Repository.Repository), watched
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
-        return status == 204
+        return status == 200
+
+    def mark_notifications_as_read(self, last_read_at=datetime.datetime.utcnow()):
+        """
+        :calls: `PUT /notifications <https://developer.github.com/v3/activity/notifications>`_
+        :param last_read_at: datetime
+        """
+        assert isinstance(last_read_at, datetime.datetime)
+        put_parameters = {
+            "last_read_at": last_read_at.strftime('%Y-%m-%dT%H:%M:%SZ')
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            "/notifications",
+            input=put_parameters
+        )
 
     def remove_from_emails(self, *emails):
         """
@@ -1041,14 +1128,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_watched(self, watched):
         """
-        :calls: `DELETE /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `DELETE /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
 
     def accept_invitation(self, invitation):
@@ -1065,8 +1152,51 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user/repository_invitations/" + str(invitation),
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
             input={}
+        )
+
+    def create_migration(self, repos, lock_repositories=github.GithubObject.NotSet, exclude_attachments=github.GithubObject.NotSet):
+        """
+        :calls: `POST /user/migrations`_
+        :param repos: list or tuple of str
+        :param lock_repositories: bool
+        :param exclude_attachments: bool
+        :rtype: :class:`github.Migration.Migration`
+        """
+        assert isinstance(repos, (list, tuple)), repos
+        assert all(isinstance(repo, (str, unicode)) for repo in repos), repos
+        assert lock_repositories is github.GithubObject.NotSet or isinstance(lock_repositories, bool), lock_repositories
+        assert exclude_attachments is github.GithubObject.NotSet or isinstance(exclude_attachments, bool), exclude_attachments
+        post_parameters = {
+            "repositories": repos
+        }
+        if lock_repositories is not github.GithubObject.NotSet:
+            post_parameters["lock_repositories"] = lock_repositories
+        if exclude_attachments is not github.GithubObject.NotSet:
+            post_parameters["exclude_attachments"] = exclude_attachments
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            "/user/migrations",
+            input=post_parameters,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
+        )
+        return github.Migration.Migration(self._requester, headers, data, completed=True)
+
+    def get_migrations(self):
+        """
+        :calls: `GET /user/migrations`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Migration.Migration`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Migration.Migration,
+            self._requester,
+            "/user/migrations",
+            None,
+            headers={
+                "Accept": Consts.mediaTypeMigrationPreview
+            }
         )
 
     def _initAttributes(self):
@@ -1091,6 +1221,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._node_id = github.GithubObject.NotSet
         self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
@@ -1150,6 +1281,8 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._login = self._makeStringAttribute(attributes["login"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "node_id" in attributes:  # pragma no branch
+            self._node_id = self._makeStringAttribute(attributes["node_id"])
         if "organizations_url" in attributes:  # pragma no branch
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch

@@ -10,7 +10,7 @@ import workflow
 from workflow import Workflow, web
 from workflow.background import run_in_background, is_running
 
-__version__ = '0.7'
+__version__ = '0.8'
 
 
 def create_workflow():
@@ -28,7 +28,7 @@ def get_github_token(wf):
 
 
 def set_github_token(wf, token):
-    wf.set_password("GitHub-gist-alfred-token", token)
+    wf.save_password("GitHub-gist-alfred-token", token)
     wf.send_feedback()
 
 
@@ -60,7 +60,7 @@ def main(wf):
     try:
         get_github_token(wf)
     except workflow.PasswordNotFound:
-        wf.add_item("Set a GitHub token with 'gist_set <token>'", icon="icons/error.png")
+        wf.add_item("Set a GitHub token with 'gg_set <token>'", icon="icons/error.png")
         wf.send_feedback()
         sys.exit()
 

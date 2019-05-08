@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
 # Copyright 2012 Dima Kukushkin <dima@kukushkin.me>                            #
@@ -10,13 +10,32 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Cameron White <cawhite@pdx.edu>                               #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2014 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2014 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2015 Brian Eugley <Brian.Eugley@capitalone.com>                    #
+# Copyright 2015 Daniel Pocock <daniel@pocock.pro>                             #
+# Copyright 2015 Jimmy Zelinskie <jimmyzelinskie@gmail.com>                    #
+# Copyright 2016 Denis K <f1nal@cgaming.org>                                   #
+# Copyright 2016 Jared K. Smith <jaredsmith@jaredsmith.net>                    #
+# Copyright 2016 Jimmy Zelinskie <jimmy.zelinskie+git@gmail.com>               #
+# Copyright 2016 Mathieu Mitchell <mmitchell@iweb.com>                         #
+# Copyright 2016 Peter Buckley <dx-pbuckley@users.noreply.github.com>          #
+# Copyright 2017 Chris McBride <thehighlander@users.noreply.github.com>        #
+# Copyright 2017 Hugo <hugovk@users.noreply.github.com>                        #
+# Copyright 2017 Simon <spam@esemi.ru>                                         #
+# Copyright 2018 Dylan <djstein@ncsu.edu>                                      #
+# Copyright 2018 Maarten Fonville <mfonville@users.noreply.github.com>         #
+# Copyright 2018 Mike Miller <github@mikeage.net>                              #
+# Copyright 2018 R1kk3r <R1kk3r@users.noreply.github.com>                      #
+# Copyright 2018 sfdye <tsfdye@gmail.com>                                      #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.github.io/PyGithub/v1/index.html                             #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -31,42 +50,122 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-# ##############################################################################
+################################################################################
 
-import logging
-import httplib
 import base64
+import json
+import logging
+import mimetypes
+import os
+import re
+import requests
+import sys
+import time
 import urllib
 import urlparse
-import sys
-import Consts
-import re
-import os
+from io import IOBase
 
-atLeastPython26 = sys.hexversion >= 0x02060000
+import Consts
+import GithubException
+
 atLeastPython3 = sys.hexversion >= 0x03000000
 
-if atLeastPython26:
-    import json
-else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
-import GithubException
+class RequestsResponse:
+    # mimic the httplib response object
+    def __init__(self, r):
+        self.status = r.status_code
+        self.headers = r.headers
+        self.text = r.text
+
+    def getheaders(self):
+        if atLeastPython3:
+            return self.headers.items()
+        else:
+            return self.headers.iteritems()
+
+    def read(self):
+        return self.text
+
+class HTTPSRequestsConnectionClass(object):
+    # mimic the httplib connection object
+    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
+        self.port = port if port else 443
+        self.host = host
+        self.protocol = "https"
+        self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
+        self.session = requests.Session()
+        # Code to support retries
+        if retry:
+            self.retry = retry
+            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
+            self.session.mount('https://', self.adapter)
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
+
+
+class HTTPRequestsConnectionClass(object):
+    # mimic the httplib connection object
+    def __init__(self, host, port=None, strict=False, timeout=None, retry=None, **kwargs):
+        self.port = port if port else 80
+        self.host = host
+        self.protocol = "http"
+        self.timeout = timeout
+        self.verify = kwargs.get("verify", True)
+        self.session = requests.Session()
+        # Code to support retries
+        if retry:
+            self.retry = retry
+            self.adapter = requests.adapters.HTTPAdapter(max_retries=self.retry)
+            self.session.mount('http://', self.adapter)
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout, verify=self.verify, allow_redirects=False)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
 
 
 class Requester:
-    __httpConnectionClass = httplib.HTTPConnection
-    __httpsConnectionClass = httplib.HTTPSConnection
+    __httpConnectionClass = HTTPRequestsConnectionClass
+    __httpsConnectionClass = HTTPSRequestsConnectionClass
+    __connection = None
+    __persist = True
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
+        cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = httplib.HTTPConnection
-        cls.__httpsConnectionClass = httplib.HTTPSConnection
+        cls.__persist = True
+        cls.__httpConnectionClass = HTTPRequestsConnectionClass
+        cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
     #############################################################
     # For Debug
@@ -87,12 +186,12 @@ class Requester:
     ON_CHECK_ME = None
 
     def NEW_DEBUG_FRAME(self, requestHeader):
-        '''
+        """
         Initialize a debug frame with requestHeader
         Frame count is updated and will be attached to respond header
         The structure of a frame: [requestHeader, statusCode, responseHeader, raw_data]
         Some of them may be None
-        '''
+        """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             new_frame = [requestHeader, None, None, None]
             if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)
@@ -125,7 +224,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
+    def __init__(self, login_or_token, password, jwt, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview, verify, retry):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -137,6 +236,8 @@ class Requester:
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
+        elif jwt is not None:
+            self.__authorizationHeader = "Bearer " + jwt
         else:
             self.__authorizationHeader = None
 
@@ -146,6 +247,7 @@ class Requester:
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
+        self.__retry = retry  # NOTE: retry can be either int or an urllib3 Retry object
         self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
@@ -167,12 +269,16 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
         self.__apiPreview = api_preview
+        self.__verify = verify
 
-    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
+    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        return self.__check(*self.requestJson(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
+        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input, self.__customConnection(url)))
+
+    def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        return self.__check(*self.requestBlob(verb, url, parameters, headers, input, self.__customConnection(url)))
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
@@ -180,14 +286,30 @@ class Requester:
             raise self.__createException(status, responseHeaders, output)
         return responseHeaders, output
 
+    def __customConnection(self, url):
+        cnx = None
+        if not url.startswith("/"):
+            o = urlparse.urlparse(url)
+            if o.hostname != self.__hostname or \
+               (o.port and o.port != self.__port) or \
+               (o.scheme != self.__scheme and not (o.scheme == "https" and self.__scheme == "http")):  # issue80
+                if o.scheme == 'http':
+                    cnx = self.__httpConnectionClass(o.hostname, o.port, retry = self.__retry)
+                elif o.scheme == 'https':
+                    cnx = self.__httpsConnectionClass(o.hostname, o.port, retry = self.__retry)
+        return cnx
+
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
-        elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
+        elif status == 401 and Consts.headerOTP in headers and re.match(r'.*required.*', headers[Consts.headerOTP]):
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
-        elif status == 403 and output.get("message").lower().startswith("api rate limit exceeded"):
+        elif status == 403 and (
+            output.get("message").lower().startswith("api rate limit exceeded")
+            or output.get("message").lower().endswith("please wait a few minutes before you try again.")
+        ):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
@@ -212,7 +334,7 @@ class Requester:
 
         return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None):
+    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -226,7 +348,21 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
+
+    def requestBlob(self, verb, url, parameters={}, headers={}, input=None, cnx=None):
+        def encode(local_path):
+            if "Content-Type" in headers:
+                mime_type = headers["Content-Type"]
+            else:
+                guessed_type = mimetypes.guess_type(input)
+                mime_type = guessed_type[0] if guessed_type[0] is not None else Consts.defaultMediaType
+            f = open(local_path, 'rb')
+            return mime_type, f
+
+        if input:
+            headers["Content-Length"] = str(os.path.getsize(input))
+        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
@@ -243,7 +379,7 @@ class Requester:
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
-        encoded_input = "null"
+        encoded_input = None
         if input is not None:
             requestHeaders["Content-Type"], encoded_input = encode(input)
 
@@ -251,13 +387,13 @@ class Requester:
 
         status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
 
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
-        if "x-ratelimit-reset" in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
+        if Consts.headerRateRemaining in responseHeaders and Consts.headerRateLimit in responseHeaders:
+            self.rate_limiting = (int(responseHeaders[Consts.headerRateRemaining]), int(responseHeaders[Consts.headerRateLimit]))
+        if Consts.headerRateReset in responseHeaders:
+            self.rate_limiting_resettime = int(responseHeaders[Consts.headerRateReset])
 
-        if "x-oauth-scopes" in responseHeaders:
-            self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
+        if Consts.headerOAuthScopes in responseHeaders:
+            self.oauth_scopes = responseHeaders[Consts.headerOAuthScopes].split(", ")
 
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
@@ -267,9 +403,6 @@ class Requester:
         original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
-        else:
-            assert cnx == "status"
-            cnx = self.__httpsConnectionClass("status.github.com", 443)
         cnx.request(
             verb,
             url,
@@ -283,11 +416,19 @@ class Requester:
         output = response.read()
 
         cnx.close()
+        if input:
+            if isinstance(input, IOBase):
+                input.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
+        if status == 202 and (verb == 'GET' or verb == 'HEAD'):  # only for requests that are considered 'safe' in RFC 2616
+            time.sleep(Consts.PROCESSING_202_WAIT_TIME)
+            return self.__requestRaw(original_cnx, verb, url, requestHeaders, input)
+
         if status == 301 and 'location' in responseHeaders:
-            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
+            o = urlparse.urlparse(responseHeaders['location'])
+            return self.__requestRaw(original_cnx, verb, o.path, requestHeaders, input)
 
         return status, responseHeaders, output
 
@@ -305,8 +446,8 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.hostname == self.__hostname
-            assert o.path.startswith(self.__prefix)
+            assert o.hostname in [self.__hostname, "uploads.github.com", "status.github.com"], o.hostname
+            assert o.path.startswith((self.__prefix, "/api/"))
             assert o.port == self.__port
             url = o.path
             if o.query != "":
@@ -323,30 +464,15 @@ class Requester:
         kwds = {}
         if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
-        if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
-            kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
+        kwds["timeout"] = self.__timeout
+        kwds["verify"] = self.__verify
 
-        ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
-        ##
-        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
-        if proxy_uri is not None:
-            url = urlparse.urlparse(proxy_uri)
-            conn = self.__connectionClass(url.hostname, url.port, **kwds)
-            headers = {}
-            if url.username and url.password:
-                auth = '%s:%s' % (url.username, url.password)
-                if atLeastPython3 and isinstance(auth, str):
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth.encode()).decode()
-                else:
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
-            conn.set_tunnel(self.__hostname, self.__port, headers)
-        else:
-            conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+        if self.__persist and self.__connection is not None:
+            return self.__connection
 
-        return conn
+        self.__connection = self.__connectionClass(self.__hostname, self.__port, retry = self.__retry, **kwds)
+
+        return self.__connection
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
@@ -356,6 +482,8 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
+                elif requestHeaders["Authorization"].startswith("Bearer"):
+                    requestHeaders["Authorization"] = "Bearer (jwt removed)"
                 else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
                     requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
+            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", verb, self.__scheme, self.__hostname, url, requestHeaders, input, status, responseHeaders, output)
