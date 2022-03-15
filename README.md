@@ -14,6 +14,8 @@ An Alfred workflow for accessing gists as snippets. Features:
 
 __Setup__
 
+⚠️ If you're running macOS Monterey 12.3 or newer, you'll need to [manually install Python](https://www.python.org/downloads/release/python-2718/) before running the workflow.
+
 Type `gg_set` and enter a username and [personal access token](https://github.com/blog/1509-personal-api-tokens) from GitHub.
 
 Set the permissions to the following - __Important__ you must set these permissions for all functionality to work:
