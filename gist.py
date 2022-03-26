@@ -46,7 +46,7 @@ def initial_load():
         update_status()
         wf.send_feedback()
         if not is_running(u"update_gists"):
-            run_in_background(u"update_gists", ['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            run_in_background(u"update_gists", ['/usr/bin/env', 'python', wf.workflowfile('update_gists.py')])
         sys.exit()
     elif is_running(u"update_gists"):
         update_status()
@@ -72,7 +72,7 @@ def main(wf):
         # Update daily.
         if diff > 60*60*24:
             if not is_running(u"update_gists"):
-                run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
+                run_in_background('update_gists',['/usr/bin/env', 'python', wf.workflowfile('update_gists.py')])
                 wf.add_item('Gist update triggered', icon="icons/download.png")
 
     initial_load()
@@ -105,7 +105,7 @@ def main(wf):
         wf.add_item(u"Update (last update: {})".format(last_update_msg), autocomplete="Update", icon="icons/download.png")
     elif term == "Update":
         if not is_running(u"update_gists"):
-            run_in_background('update_gists',['/usr/bin/python', wf.workflowfile('update_gists.py')])
+            run_in_background('update_gists',['/usr/bin/env', 'python', wf.workflowfile('update_gists.py')])
             wf.add_item('Updating gists...', subtitle=u"Update runs in the backround.", valid=True, icon="icons/download.png")
             wf.send_feedback()
             sys.exit()

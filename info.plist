@@ -506,7 +506,7 @@
 				<key>escaping</key>
 				<integer>116</integer>
 				<key>script</key>
-				<string>python set_info.py "{query}"</string>
+				<string>/usr/bin/env python set_info.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -695,7 +695,7 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>python gist.py "{query}"</string>
+				<string>/usr/bin/env python gist.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -902,7 +902,7 @@
 				<key>escaping</key>
 				<integer>116</integer>
 				<key>script</key>
-				<string>python set_info.py "{query}"</string>
+				<string>/usr/bin/env python set_info.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -964,7 +964,7 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>python gist_set.py "{query}"</string>
+				<string>/usr/bin/env python gist_set.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
