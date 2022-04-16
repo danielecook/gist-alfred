@@ -10,7 +10,7 @@ import workflow
 from workflow import Workflow, web
 from workflow.background import run_in_background, is_running
 
-__version__ = '0.8'
+__version__ = '0.9'
 
 
 def create_workflow():
